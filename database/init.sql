@@ -241,9 +241,8 @@ INSERT INTO `mydb`.`user` (name_user, email, password) VALUES
 ('George Michael', 'george.michael@example.com', 'password123'),
 ('Hannah Baker', 'hannah.baker@example.com', 'password123'),
 ('Ivy League', 'ivy.league@example.com', 'password123'),
-('Jack Daniels', 'jack.daniels@example.com', 'password123');
-
-
+('Jack Daniels', 'jack.daniels@example.com', 'password123'),
+('Carlos Silva', 'admin@teste.com', '$2a$10$QtejTfnrdnsefCDwSZXKeu9vtCxsxDfn3PWOHUzr31Vml.7zQ85Qi');
 
 INSERT INTO `mydb`.`user_loan` 
   (`name`, `email`, `rna`, `enterprise`, `identification`, `phone`, `status`, `type_user`) 
