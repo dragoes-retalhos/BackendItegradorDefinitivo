@@ -183,20 +183,32 @@ CREATE TABLE IF NOT EXISTS `mydb`.`location` (
     REFERENCES `mydb`.`laboratory_item` (`id_laboratory_item_heritage`))
 ENGINE = InnoDB;
 
+-- -------------------------------
+-- Table notifications
+-- -------------------------------
+CREATE TABLE notification (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    related_id INT NOT NULL, -- ID do item ou manutenção relacionado
+    message VARCHAR(255) NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    displayed BOOLEAN NOT NULL DEFAULT FALSE,
+    UNIQUE (related_id, type)
+);
 
 
 
 INSERT INTO `mydb`.`laboratory_item` 
 (name_item, brand, model, serial_number, invoice_number, entry_date, next_calibration, category) 
 VALUES 
-('Microscope A', 'BrandX', 'Model1', 'SN123456', 'INV1001', '2024-01-15', '2025-01-15', 1),
+('Microscope A', 'BrandX', 'Model1', 'SN123456', 'INV1001', '2024-01-15', '2024-12-15', 1),
 ('Spectrophotometer B', 'BrandY', 'Model2', 'SN789012', 'INV1002', '2024-02-20', '2025-02-20', 0),
 ('Pipette C', 'BrandZ', 'Model3', 'SN345678', 'INV1003', '2024-03-25', '2025-03-25', 1),
-('Centrifuge D', 'BrandX', 'Model4', 'SN901234', 'INV1004', '2024-04-10', '2025-04-10', 0),
+('Centrifuge D', 'BrandX', 'Model4', 'SN901234', 'INV1004', '2024-04-10', '2024-12-14', 0),
 ('Incubator E', 'BrandY', 'Model5', 'SN567890', 'INV1005', '2024-05-15', '2025-05-15', 1),
 ('Biosafety Cabinet F', 'BrandZ', 'Model6', 'SN135792', 'INV1006', '2024-06-20', '2025-06-20', 0),
 ('Refrigerator G', 'BrandX', 'Model7', 'SN246803', 'INV1007', '2024-07-25', '2025-07-25', 1),
-('Fume Hood H', 'BrandY', 'Model8', 'SN864209', 'INV1008', '2024-08-30', '2025-08-30', 0),
+('Fume Hood H', 'BrandY', 'Model8', 'SN864209', 'INV1008', '2024-08-30', '2024-12-20', 0),
 ('Water Bath I', 'BrandZ', 'Model9', 'SN975310', 'INV1009', '2024-09-05', '2025-09-05', 1),
 ('pH Meter J', 'BrandX', 'Model10', 'SN111213', 'INV1010', '2024-10-01', '2025-10-01', 0);
 
@@ -260,11 +272,11 @@ VALUES
 
 -- Inserindo Empréstimos
 INSERT INTO `mydb`.`loan` (loan_date, expected_return_date, return_date, status, user_id_user, user_loan_iduser_loan) VALUES
-('2024-09-01 10:00:00', '2024-09-15 10:00:00', NULL, 1, 1, 1),
-('2024-09-05 15:30:00', '2024-09-20 15:30:00', NULL, 0, 2, 2),
-('2024-09-10 12:00:00', NULL, NULL, 1, 3, 3),
-('2024-09-12 14:00:00', '2024-09-25 14:00:00', NULL, 1, 4, 1),
-('2024-09-20 09:30:00', NULL, NULL, 0, 5, 2);
+('2024-09-01 10:00:00', '2024-12-15 10:00:00', NULL, 1, 1, 1),
+('2024-09-05 15:30:00', '2024-12-20 15:30:00', NULL, 0, 2, 2),
+('2024-09-10 12:00:00', '2024-12-13 12:00:00', NULL, 1, 3, 3),  -- A data de retorno foi definida como '2024-09-20' para enquadrar na view
+('2024-09-12 14:00:00', '2024-12-18 14:00:00', NULL, 1, 4, 1),
+('2024-09-20 09:30:00', '2024-12-15 09:30:00', NULL, 0, 5, 2);  -- Data de devolução prevista ajustada
 
 -- Associando Itens aos Empréstimos
 INSERT INTO `mydb`.`loan_has_laboratory_item` (loan_id_loan, laboratory_item_id_laboratory_item) VALUES
@@ -314,6 +326,28 @@ JOIN
     laboratory_item li ON lli.laboratory_item_id_laboratory_item = li.id_laboratory_item_heritage
 GROUP BY 
     l.id_loan, l.status, l.loan_date, l.expected_return_date, ul.name;
+
+
+CREATE OR REPLACE VIEW loans_due_soon AS
+SELECT 
+    l.id_loan,
+    l.expected_return_date
+FROM 
+    loan l
+WHERE 
+    l.expected_return_date BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 2 DAY)
+    AND l.return_date IS NULL; -- Exclui os empréstimos já devolvidos
+
+
+
+CREATE OR REPLACE VIEW items_due_for_maintenance AS
+SELECT 
+    li.id_laboratory_item_heritage AS item_id,
+    li.next_calibration
+FROM 
+    laboratory_item li
+WHERE 
+    li.next_calibration BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 15 DAY);
 
 
 -- =============================================

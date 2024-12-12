@@ -15,4 +15,6 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
 
     @Query("SELECT l FROM Loan l JOIN l.laboratoryItems li WHERE li.id = :itemId")
     List<Loan> findByLaboratoryItemsId(@Param("itemId") Long itemId);
+
+  
 }
