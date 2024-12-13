@@ -165,7 +165,7 @@ public class LaboratoryItemController {
             ApiErrorResponse errorResponse = new ApiErrorResponse(
                     HttpStatus.INTERNAL_SERVER_ERROR.value(),
                     "Internal Server Error",
-                    "Erro ao buscar itens com status " + status,
+                    e.getMessage(),
                     "/api/item/status/" + status);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }

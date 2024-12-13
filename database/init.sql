@@ -199,18 +199,19 @@ CREATE TABLE notification (
 
 
 INSERT INTO `mydb`.`laboratory_item` 
-(name_item, brand, model, serial_number, invoice_number, entry_date, next_calibration, category) 
+(name_item, brand, model, serial_number, invoice_number, entry_date, next_calibration, category, status) 
 VALUES 
-('Microscope A', 'BrandX', 'Model1', 'SN123456', 'INV1001', '2024-01-15', '2024-12-15', 1),
-('Spectrophotometer B', 'BrandY', 'Model2', 'SN789012', 'INV1002', '2024-02-20', '2025-02-20', 0),
-('Pipette C', 'BrandZ', 'Model3', 'SN345678', 'INV1003', '2024-03-25', '2025-03-25', 1),
-('Centrifuge D', 'BrandX', 'Model4', 'SN901234', 'INV1004', '2024-04-10', '2024-12-14', 0),
-('Incubator E', 'BrandY', 'Model5', 'SN567890', 'INV1005', '2024-05-15', '2025-05-15', 1),
-('Biosafety Cabinet F', 'BrandZ', 'Model6', 'SN135792', 'INV1006', '2024-06-20', '2025-06-20', 0),
-('Refrigerator G', 'BrandX', 'Model7', 'SN246803', 'INV1007', '2024-07-25', '2025-07-25', 1),
-('Fume Hood H', 'BrandY', 'Model8', 'SN864209', 'INV1008', '2024-08-30', '2024-12-20', 0),
-('Water Bath I', 'BrandZ', 'Model9', 'SN975310', 'INV1009', '2024-09-05', '2025-09-05', 1),
-('pH Meter J', 'BrandX', 'Model10', 'SN111213', 'INV1010', '2024-10-01', '2025-10-01', 0);
+('Microscope A', 'BrandX', 'Model1', 'SN123456', 'INV1001', '2024-01-15', '2024-12-15', 1, 0),
+('Spectrophotometer B', 'BrandY', 'Model2', 'SN789012', 'INV1002', '2024-02-20', '2025-02-20', 0, 1),
+('Pipette C', 'BrandZ', 'Model3', 'SN345678', 'INV1003', '2024-03-25', '2025-03-25', 1, 2),
+('Centrifuge D', 'BrandX', 'Model4', 'SN901234', 'INV1004', '2024-04-10', '2024-12-14', 0, 3),
+('Incubator E', 'BrandY', 'Model5', 'SN567890', 'INV1005', '2024-05-15', '2025-05-15', 1, 0),
+('Biosafety Cabinet F', 'BrandZ', 'Model6', 'SN135792', 'INV1006', '2024-06-20', '2025-06-20', 0, 1),
+('Refrigerator G', 'BrandX', 'Model7', 'SN246803', 'INV1007', '2024-07-25', '2025-07-25', 1, 2),
+('Fume Hood H', 'BrandY', 'Model8', 'SN864209', 'INV1008', '2024-08-30', '2024-12-20', 0, 3),
+('Water Bath I', 'BrandZ', 'Model9', 'SN975310', 'INV1009', '2024-09-05', '2025-09-05', 1, 0),
+('pH Meter J', 'BrandX', 'Model10', 'SN111213', 'INV1010', '2024-10-01', '2025-10-01', 0, 1);
+
 
 
 
