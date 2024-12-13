@@ -2,16 +2,12 @@ package com.inventario.backend_inventario.controller;
 
 import java.util.List;
 
+import com.inventario.backend_inventario.entity.enums.StatusItemEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.inventario.backend_inventario.entity.LaboratoryItem;
 import com.inventario.backend_inventario.entity.dto.LaboratoryItemDto;
@@ -132,5 +128,46 @@ public class LaboratoryItemController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
 
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateItem(@PathVariable Long id, @Valid @RequestBody LaboratoryItem laboratoryItem) {
+        try {
+            laboratoryItem.setId(id);
+            laboratoryItemService.updateItem(laboratoryItem);
+            return ResponseEntity.ok("Item atualizado com sucesso.");
+        } catch (RuntimeException e) {
+            ApiErrorResponse errorResponse = new ApiErrorResponse(
+                    HttpStatus.NOT_FOUND.value(),
+                    "Not Found",
+                    e.getMessage(),
+                    "/api/item/" + id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        } catch (Exception e) {
+            ApiErrorResponse errorResponse = new ApiErrorResponse(
+                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    "Internal Server Error",
+                    "Erro ao atualizar o item",
+                    "/api/item/" + id);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    @GetMapping("/status/{status}")
+    public ResponseEntity<Object> getItemsByStatus(@PathVariable StatusItemEnum status) {
+        try {
+            List<LaboratoryItemDto> items = laboratoryItemService.getItemsByStatus(status);
+            if (items.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            }
+            return ResponseEntity.ok(items);
+        } catch (Exception e) {
+            ApiErrorResponse errorResponse = new ApiErrorResponse(
+                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    "Internal Server Error",
+                    "Erro ao buscar itens com status " + status,
+                    "/api/item/status/" + status);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
     }
 }

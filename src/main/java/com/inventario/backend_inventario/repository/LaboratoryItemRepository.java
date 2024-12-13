@@ -2,6 +2,7 @@ package com.inventario.backend_inventario.repository;
 
 import java.util.List;
 
+import com.inventario.backend_inventario.entity.enums.StatusItemEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,6 +27,8 @@ public interface LaboratoryItemRepository extends JpaRepository<LaboratoryItem, 
 
     @Query(value = "SELECT brand, model FROM unique_brands_models", nativeQuery = true)
     List<Object[]> findAllBrandModels();
+
+    List<LaboratoryItem> findAllByStatus(StatusItemEnum status);
 
     
 }

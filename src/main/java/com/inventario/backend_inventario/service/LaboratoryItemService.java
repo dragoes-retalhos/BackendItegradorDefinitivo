@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.inventario.backend_inventario.entity.enums.StatusItemEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -95,6 +96,27 @@ public class LaboratoryItemService {
         if (!laboratoryItemRepository.existsByNameItem(nameItem)) {
             throw new ResourceNotFoundException("Item não encontrado com o nome: " + nameItem);
         }
+    }
+
+    public void updateItem(LaboratoryItem laboratoryItem) {
+        laboratoryItemRepository.save(laboratoryItem);
+    }
+
+    public List<LaboratoryItemDto> getItemsByStatus(StatusItemEnum status) {
+        return laboratoryItemRepository.findAllByStatus(status)
+                .stream()
+                .map(item -> new LaboratoryItemDto(
+                        item.getId(),
+                        item.getNameItem(),
+                        item.getBrand(),
+                        item.getModel(),
+                        item.getSerialNumber(),
+                        item.getInvoiceNumber(),
+                        item.getEntryDate(),
+                        item.getNextCalibration(),
+                        item.getStatus(),
+                        item.getCategory()))
+                .collect(Collectors.toList());
     }
 
 }
