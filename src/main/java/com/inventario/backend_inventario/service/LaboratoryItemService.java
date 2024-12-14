@@ -102,8 +102,10 @@ public class LaboratoryItemService {
         laboratoryItemRepository.save(laboratoryItem);
     }
 
-    public List<LaboratoryItemDto> getItemsByStatus(StatusItemEnum status) {
-        return laboratoryItemRepository.findAllByStatus(status)
+
+
+    public List<LaboratoryItemDto> getAllItems() {
+        return laboratoryItemRepository.findAll()
                 .stream()
                 .map(item -> new LaboratoryItemDto(
                         item.getId(),

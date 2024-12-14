@@ -28,7 +28,7 @@ public interface LaboratoryItemRepository extends JpaRepository<LaboratoryItem, 
     @Query(value = "SELECT brand, model FROM unique_brands_models", nativeQuery = true)
     List<Object[]> findAllBrandModels();
 
-    List<LaboratoryItem> findAllByStatus(StatusItemEnum status);
+    List<LaboratoryItem> findAll();
 
     
 }

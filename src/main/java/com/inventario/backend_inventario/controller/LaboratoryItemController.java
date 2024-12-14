@@ -153,21 +153,22 @@ public class LaboratoryItemController {
         }
     }
 
-    @GetMapping("/status/{status}")
-    public ResponseEntity<Object> getItemsByStatus(@PathVariable StatusItemEnum status) {
-        try {
-            List<LaboratoryItemDto> items = laboratoryItemService.getItemsByStatus(status);
-            if (items.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-            }
-            return ResponseEntity.ok(items);
-        } catch (Exception e) {
-            ApiErrorResponse errorResponse = new ApiErrorResponse(
-                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                    "Internal Server Error",
-                    e.getMessage(),
-                    "/api/item/status/" + status);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+
+    @GetMapping("/all")
+public ResponseEntity<Object> getAllItems() {
+    try {
+        List<LaboratoryItemDto> items = laboratoryItemService.getAllItems();
+        if (items.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
+        return ResponseEntity.ok(items);
+    } catch (Exception e) {
+        ApiErrorResponse errorResponse = new ApiErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Internal Server Error",
+                "Erro ao buscar todos os itens",
+                "/api/item/all");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
+}
 }

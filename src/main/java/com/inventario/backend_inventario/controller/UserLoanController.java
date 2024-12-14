@@ -105,45 +105,35 @@ public class UserLoanController {
         }
     }
 
-    @PutMapping
-    public ResponseEntity<Object> updateUser(@Valid @RequestBody UserLoan userLoan) {
-
-        try {
-
-            UserLoanDTO updateUser = userLoanService.updateUser(userLoan);
-            return ResponseEntity.status(HttpStatus.CREATED).body(updateUser);
-
-        } catch (DataIntegrityViolationException e) {
-
-            ApiErrorResponse errorResponse = new ApiErrorResponse(
-                    HttpStatus.CONFLICT.value(),
-                    "Conflict",
-                    e.getMessage(),
-                    "/api/userLoan");
-
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
-
-        } catch (RuntimeException e) {
-            ApiErrorResponse errorResponse = new ApiErrorResponse(
-                    HttpStatus.NOT_FOUND.value(),
-                    "Not Found",
-                    e.getMessage(),
-                    "/api/userLoan/" + userLoan.getId());
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-
-        } catch (Exception e) {
-
-            ApiErrorResponse errorResponse = new ApiErrorResponse(
-                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                    "Internal Server Error",
-                    e.getMessage(),
-                    "/api/userLoan");
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
-
+    @PutMapping("/{id}")
+public ResponseEntity<Object> updateUser(@PathVariable Long id, @Valid @RequestBody UserLoan userLoan) {
+    try {
+        userLoan.setId(id);
+        UserLoanDTO updateUser = userLoanService.updateUser(userLoan);
+        return ResponseEntity.status(HttpStatus.CREATED).body(updateUser);
+    } catch (DataIntegrityViolationException e) {
+        ApiErrorResponse errorResponse = new ApiErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                "Conflict",
+                e.getMessage(),
+                "/api/userLoan");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    } catch (RuntimeException e) {
+        ApiErrorResponse errorResponse = new ApiErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "Not Found",
+                e.getMessage(),
+                "/api/userLoan/" + id);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    } catch (Exception e) {
+        ApiErrorResponse errorResponse = new ApiErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Internal Server Error",
+                e.getMessage(),
+                "/api/userLoan");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
+}
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable Long id) {
